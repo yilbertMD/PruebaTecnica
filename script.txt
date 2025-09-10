@@ -1,0 +1,63 @@
+CREATE DATABASE ProyectoBase;
+GO
+
+USE ProyectoBase;
+GO
+
+-- ===========================
+-- Tabla: Permisos
+-- ===========================
+CREATE TABLE Permisos (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100) NOT NULL,
+    Descripcion NVARCHAR(255) NULL
+);
+GO
+
+-- ===========================
+-- Tabla: Roles
+-- ===========================
+CREATE TABLE Roles (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Roles NVARCHAR(50) NULL
+);
+GO
+
+-- ===========================
+-- Tabla: RolPermisos (N:M entre Roles y Permisos)
+-- ===========================
+CREATE TABLE RolPermisos (
+    RolId INT NOT NULL,
+    PermisoId INT NOT NULL,
+    CONSTRAINT PK_RolPermisos PRIMARY KEY (RolId, PermisoId),
+    CONSTRAINT FK_RolPermisos_Rol FOREIGN KEY (RolId) REFERENCES Roles(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_RolPermisos_Permiso FOREIGN KEY (PermisoId) REFERENCES Permisos(Id) ON DELETE CASCADE
+);
+GO
+
+-- ===========================
+-- Tabla: Usuarios
+-- ===========================
+CREATE TABLE Usuarios (
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Nombre NVARCHAR(100) NULL,
+    Email NVARCHAR(100) NULL,
+    TipoDocumento NVARCHAR(50) NULL,
+    Documento NVARCHAR(50) NULL,
+    Password NVARCHAR(250) NULL,
+    RefreshToken NVARCHAR(50) NULL,
+    RefreshTokenExpiration DATETIME NULL
+);
+GO
+
+-- ===========================
+-- Tabla: UsuarioRoles (N:M entre Usuarios y Roles)
+-- ===========================
+CREATE TABLE UsuarioRoles (
+    UsuarioId INT NOT NULL,
+    RolId INT NOT NULL,
+    CONSTRAINT PK_UsuarioRoles PRIMARY KEY (UsuarioId, RolId),
+    CONSTRAINT FK_UsuarioRoles_Usuario FOREIGN KEY (UsuarioId) REFERENCES Usuarios(Id) ON DELETE CASCADE,
+    CONSTRAINT FK_UsuarioRoles_Rol FOREIGN KEY (RolId) REFERENCES Roles(Id) ON DELETE CASCADE
+);
+GO
